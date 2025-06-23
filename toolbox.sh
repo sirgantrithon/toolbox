@@ -26,10 +26,12 @@ b_run pacman -Suy --noconfirm \
   gcc \
   git \
   git-delta \
+  jdk21-openjdk \
   jq \
   lynx \
   man-db \
   man-pages \
+  maven \
   ninja \
   neovim \
   openssh \
@@ -73,6 +75,11 @@ b_run mkdir -p /build/multirust
 b_run mkdir -p /build/cargo
 b_run rustup install stable
 b_run cargo install --locked cargo-watch jj-cli cargo-audit cargo-checkmate licensure
+
+# Install NodeJS
+b_run git clone https://github.com/nvm-sh/nvm.git /build/nvm
+b_run bash -c 'cd /build/nvm && git -c advice.detachedHead=false checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`'
+b_run bash -c 'source /build/nvm/nvm.sh && nvm install --lts && nvm use --lts && nvm install-latest-npm && npm install -g npm typescript-language-server typescript @vue/language-server @vue/typescript-plugin vue-tsc http-server'
 
 # Commit the toolbox image
 sudo buildah commit $container toolbox
